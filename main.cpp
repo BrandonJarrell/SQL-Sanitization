@@ -8,30 +8,33 @@ using namespace std;
 /************************
 * NORMAL Query Generator
 *************************/
-void genQuery(string username, string password)
+string genQuery(string username, string password)
 {
-	cout << "SELECT authenticate\n\t"
-		<< "WHERE " << username << "\n\t\tAT " << password << endl;
+	/*cout << "SELECT authenticate\n\t"
+		<< "WHERE " << username << "\n\t\tAT " << password << endl;*/
+	return ("SELECT authenticate WHERE " + username + " AT " + password);
 }
 
 
 /************************
 * WEAK Query Generator
 *************************/
-void genQueryWeak(string username, string password)
+string genQueryWeak(string username, string password)
 {
-	cout << "SELECT authenticate\n\t"
-		<< "WHERE " << username << "\n\t\tAT " << password << endl;
+	/*cout << "SELECT authenticate\n\t"
+		<< "WHERE " << username << "\n\t\tAT " << password << endl;*/
+	return ("SELECT authenticate WHERE " + username + " AT " + password);
 }
 
 
 /************************
 * STRONG Query Generator
 *************************/
-void genQueryStrong(string username, string password)
+string genQueryStrong(string username, string password)
 {
-	cout << "SELECT authenticate\n\t"
-		<< "WHERE " << username << "\n\t\tAT " << password << endl;
+	/*cout << "SELECT authenticate\n\t"
+		<< "WHERE " << username << "\n\t\tAT " << password << endl;*/
+	return ("SELECT authenticate WHERE " + username + " AT " + password);
 }
 
 /************************
@@ -65,68 +68,6 @@ void testComment()
 *  END OF NORMAL
 *************************/
 
-/************************
-* WEAK
-*************************/
-void testValidWeak()
-{
-
-}
-
-void testTautologyWeak()
-{
-
-}
-
-void testUnionWeak()
-{
-
-}
-
-void testAddStateWeak()
-{
-
-}
-
-void testCommentWeak()
-{
-
-}
-/************************
-*  END OF WEAK
-*************************/
-
-/************************
-* STRONG
-*************************/
-void testValidStrong()
-{
-
-}
-
-void testTautologyStrong()
-{
-
-}
-
-void testUnionStrong()
-{
-
-}
-
-void testAddStateStrong()
-{
-
-}
-
-void testCommentStrong()
-{
-
-}
-/************************
-*  END OF STRONG
-*************************/
-
 
 
 int main()
@@ -135,8 +76,8 @@ int main()
 	string password;
 
 	cout << "\n\tSQL Injection Sanitization\n\n"
-		  << "\tPlease enter a User name and Password\n";
-	
+		<< "\tPlease enter a User name and Password\n";
+
 	cout << "\tUsername: ";
 	cin >> username;
 
@@ -145,43 +86,19 @@ int main()
 
 	cout << "\n\tUsername is \"" << username << "\" and the " << "Password is \"" << password << "\"\n";
 
-	genQuery(username, password);
-	//system("ping www.google.com");
+	cout << "\n\tNormal genQuery: " << genQuery(username, password);
+	cout << "\n\tWeak genQuery: " << genQueryWeak(username, password);
+	cout << "\n\tStronggenQuery: " << genQueryStrong(username, password);
+	
 	/*
-	// NORMAL GENERATOR
-	genQuery(username, password);
-
-	// WEAK GENERATOR
-	genQueryWeak(username, password);
-
-	// STRONG GENERATOR
-	genQueryStrong(username, password);
-
-	// NORMAL
 	testValid();
 	testTautology();
 	testUnion();
 	testAddState();
 	testComment();
-
-	// WEAK
-	testValidWeak();
-	testTautologyWeak();
-	testUnionWeak();
-	testAddStateWeak();
-	testCommentWeak();
-
-	//STRONG
-	testValidStrong();
-	testTautologyStrong();
-	testUnionStrong();
-	testAddStateStrong();
-	testCommentStrong();
-
-
 	*/
 
-	system("cd");
+
 
 
 
