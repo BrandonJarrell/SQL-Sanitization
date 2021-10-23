@@ -239,9 +239,9 @@ void testAddState()
 		switch (i)
 		{
 		case 1:  // Brandon
-			cout << endl << "Brandon:\n" << "Normal: " << genQuery("mrPresident", "get_rekt_nerd'; DROP TABLE *") << endl;
-			cout << "Weak: " << genQuery(mitigateWeak("mrPresident"), mitigateWeak("get_rekt_nerd'; DROP TABLE *")) << endl;
-			cout << "Strong: " << genQuery(mitigateStrong("mrPresident"), mitigateStrong("get_rekt_nerd'; DROP TABLE *")) << endl;
+			cout << endl << "Brandon:\n" << "Normal: " << genQuery("mrPresident", "get_rekt_nerd'; DROP TABLE *;--") << endl;
+			cout << "Weak: " << genQuery(mitigateWeak("mrPresident"), mitigateWeak("get_rekt_nerd'; DROP TABLE *;--")) << endl;
+			cout << "Strong: " << genQuery(mitigateStrong("mrPresident"), mitigateStrong("get_rekt_nerd'; DROP TABLE *;--")) << endl;
 			break;
 
 		case 2: // Jared
