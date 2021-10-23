@@ -11,7 +11,7 @@ string genQuery(string username, string password)
 {
 	/*cout << "SELECT authenticate\n\t"
 		<< "WHERE " << username << "\n\t\tAT " << password << endl;*/
-	return ("SELECT * FROM authenticate WHERE UNAME = '" + username + "' AND PASSW = '" + password+ "'");
+	return ("SELECT * FROM authenticate WHERE UNAME = '" + username + "' AND PASSW = '" + password + "'");
 }
 
 
@@ -20,10 +20,42 @@ string genQuery(string username, string password)
 *************************/
 string mitigateWeak(string inputToBeSan)
 {
-	/*cout << "SELECT authenticate\n\t"
-		<< "WHERE " << username << "\n\t\tAT " << password << endl;*/
+	for (int i = 0; i < inputToBeSan.size(); i++)
+	{
+		// Black List
+		switch (inputToBeSan[i])
+		{
+
+		case ' ': // space, never allowed
+			inputToBeSan[i] = '\0';
+			break;
+
+		case '\\': // forward slash, check further? not sure if this is an attack character
+			inputToBeSan[i] = '\0';
+			break;
+
+		case '\'': // single quote, never allowed
+			inputToBeSan[i] = '\0';
+			break;
+
+		case 'O': // the start of the OR process, check for the next part of the potential attack
+			if (inputToBeSan[i+1] == 'R')
+				inputToBeSan[i] = '\0';
+			break;
+
+		case '-': // the start of the comment, checks if there is a second one
+			if (inputToBeSan[i+1] == '-')
+				inputToBeSan[i] = '\0';
+			break;
+
+		case ';':
+			inputToBeSan[i] = '\0';
+			break;
+		}
+	}
+
 	return (inputToBeSan);
-	
+
 }
 
 
@@ -32,8 +64,62 @@ string mitigateWeak(string inputToBeSan)
 *************************/
 string mitigateStrong(string inputToBeSan)
 {
-	/*cout << "SELECT authenticate\n\t"
-		<< "WHERE " << username << "\n\t\tAT " << password << endl;*/
+	if (inputToBeSan.size() > 19) // IF it's beyond our specified length, do something
+		return "Input max is 20";  // Should be discussed.
+
+	for (int i = 0; i < inputToBeSan.size(); i++)
+	{
+		// White List
+
+		// NOT ALLOWED: if its escape characters (\n \t \v \r and other control shotcut characters) https://www.cplusplus.com/reference/cctype/
+		if (iscntrl(inputToBeSan[i]))
+		{
+			inputToBeSan[i] = '\0';
+			continue;
+		}
+
+		// ALLOWED: if it is a character in the alphabet, it is allowed
+		if (isalpha(inputToBeSan[i]) || isdigit(inputToBeSan[i]))
+		{
+			continue;
+		}
+
+		// SIFT FOR ALLOWED except a few specific ones triggered by ispunct()
+		if (ispunct(inputToBeSan[i]))  // EXLUCDED  "  '  \  ; -  everything else is allowed.
+		{
+			switch (inputToBeSan[i])
+			{
+				case ';':
+					inputToBeSan[i] = '\0';
+					break;
+			
+				case '\\':
+					inputToBeSan[i] = '\0';
+					break;
+			
+				case '\'':
+					inputToBeSan[i] = '\0';
+					break;
+
+				case '"':
+					inputToBeSan[i] = '\0';
+					break;
+
+				case '-':  // up for debate
+					if(inputToBeSan[i+1] == '-')
+						inputToBeSan[i] = '\0';
+					break;
+
+				default: 
+					continue;
+			}
+		} // end of if
+		
+		// blocks anything else I couldn't think of, this should be up for debate
+		inputToBeSan[i] = '\0';
+
+	} // end of loop
+
 	return (inputToBeSan);
 }
 
@@ -137,7 +223,7 @@ void testUnion()
 		switch (i)
 		{
 		case 1:  // Brandon
-			cout <<endl << "Brandon:\n" << "Normal: " << genQuery("", "") << endl; // SELECT WHERE "BrAnD0n_JaRrel" AT "I_love_My_m0m"
+			cout << endl << "Brandon:\n" << "Normal: " << genQuery("", "") << endl; // SELECT WHERE "BrAnD0n_JaRrel" AT "I_love_My_m0m"
 			cout << "Weak: " << genQuery(mitigateWeak(""), mitigateWeak("")) << endl;
 			cout << "Strong: " << genQuery(mitigateStrong(""), mitigateStrong("")) << endl;
 			break;
@@ -155,8 +241,8 @@ void testUnion()
 			break;
 
 		case 4: //Nicole
-			cout << endl << "Nicole:\n" << "Normal: "<< genQuery("I\'mAUser", "x' UNION SELECT credit_card FROM Customers") << endl; //SELECT WHERE PennyAna sootSprite
-			cout << "Weak: " << genQuery(mitigateWeak("I\'mAUser"), mitigateWeak("x' UNION SELECT credit_card FROM Customers")) << endl;               
+			cout << endl << "Nicole:\n" << "Normal: " << genQuery("I\'mAUser", "x' UNION SELECT credit_card FROM Customers") << endl; //SELECT WHERE PennyAna sootSprite
+			cout << "Weak: " << genQuery(mitigateWeak("I\'mAUser"), mitigateWeak("x' UNION SELECT credit_card FROM Customers")) << endl;
 			cout << "Strong: " << genQuery(mitigateStrong("I\'mAUser"), mitigateStrong("x' UNION SELECT credit_card FROM Customers")) << endl;
 			break;
 
@@ -176,8 +262,8 @@ void testUnion()
 *************************/
 void testAddState()
 {
-	
-	cout<<endl << "Testing AddState:\n\n";
+
+	cout << endl << "Testing AddState:\n\n";
 	for (int i = 0; i < 6; i++) // because there are 5 of us
 	{
 		switch (i)
@@ -201,8 +287,8 @@ void testAddState()
 			break;
 
 		case 4: //Nicole
-			cout <<endl << "Nicole:\n" << "Normal: " << genQuery("Bob", "42'; INSERT INTO Customer(name, password) VALUES 'Isaac Asimov', 'Foundation'") << endl; //SELECT WHERE PennyAna sootSprite
-			cout << "Weak: " << genQuery(mitigateWeak("Bob"), mitigateWeak("42'; INSERT INTO Customer(name, password) VALUES 'Isaac Asimov', 'Foundation'")) << endl;        ;
+			cout << endl << "Nicole:\n" << "Normal: " << genQuery("Bob", "42'; INSERT INTO Customer(name, password) VALUES 'Isaac Asimov', 'Foundation'") << endl; //SELECT WHERE PennyAna sootSprite
+			cout << "Weak: " << genQuery(mitigateWeak("Bob"), mitigateWeak("42'; INSERT INTO Customer(name, password) VALUES 'Isaac Asimov', 'Foundation'")) << endl; ;
 			cout << "Strong: " << genQuery(mitigateStrong("Bob"), mitigateStrong("42'; INSERT INTO Customer(name, password) VALUES 'Isaac Asimov', 'Foundation'")) << endl;
 			break;
 
@@ -222,7 +308,7 @@ void testAddState()
 *************************/
 void testComment()
 {
-	cout<< endl << "Testing Comments:\n\n";
+	cout << endl << "Testing Comments:\n\n";
 	for (int i = 0; i < 6; i++) // because there are 5 of us
 	{
 		switch (i)
@@ -246,8 +332,8 @@ void testComment()
 			break;
 
 		case 4: //Nicole
-			cout << endl <<"Normal: " << genQuery("Root'; --", "chilledmonkeybrains") << endl; //SELECT WHERE PennyAna sootSprite
-			cout << "Weak: " << genQuery(mitigateWeak("Root'; --"), mitigateWeak("chilledmonkeybrains")) << endl;           
+			cout << endl << "Normal: " << genQuery("Root'; --", "chilledmonkeybrains") << endl; //SELECT WHERE PennyAna sootSprite
+			cout << "Weak: " << genQuery(mitigateWeak("Root'; --"), mitigateWeak("chilledmonkeybrains")) << endl;
 			cout << "Strong: " << genQuery(mitigateStrong("Root'; --"), mitigateStrong("chilledmonkeybrains")) << endl;
 			break;
 
@@ -268,13 +354,21 @@ int main()
 {
 
 	cout << "\n\tSQL Injection Sanitization\n\n";
-	
-	testValid();
-	testTautology();
-	testUnion();
-	testAddState();
-	testComment();
 
+	//testValid();
+	//testTautology();
+	//testUnion();
+	//testAddState();
+	//testComment();
+	string testString;
+	do
+	{
+		cout << "\n\nInput a string to test mitigation returns\n";
+		cout << "\t";
+		getline(cin, testString);
+		cout << "weak  \t" << mitigateWeak(testString) << "    is the output\n";
+		cout << "strong\t" << mitigateStrong(testString) << "    is the output\n";
+	} while (true);
 
 	return 0;
 }
