@@ -161,9 +161,9 @@ void testTautology()
 			break;
 
 		case 3: // Ian
-			cout << endl << "Ian:\n" << "Normal: " << genQuery("", "") << endl; // SELECT WHERE "Outer_Space_TROLL" AND "SporeCaptain$piceTr@der"
-			cout << "Weak: " << genQuery(mitigateWeak(""), mitigateWeak("")) << endl;
-			cout << "Strong: " << genQuery(mitigateStrong(""), mitigateStrong("")) << endl;
+			cout << endl << "Ian:\n" << "Normal: " << genQuery("NotSus", "imposter' OR 1 = true") << endl; // SELECT WHERE "Outer_Space_TROLL" AND "SporeCaptain$piceTr@der"
+			cout << "Weak: " << genQuery(mitigateWeak("NotSus"), mitigateWeak("imposter' OR 1 = true")) << endl;
+			cout << "Strong: " << genQuery(mitigateStrong("NotSus"), mitigateStrong("imposter' OR 1 = true")) << endl;
 			break;
 
 		case 4: //Nicole
@@ -206,9 +206,9 @@ void testUnion()
 			break;
 
 		case 3: // Ian
-			cout << endl << "Ian:\n" << "Normal: " << genQuery("", "") << endl; // SELECT WHERE "Outer_Space_TROLL" AND "SporeCaptain$piceTr@der"
-			cout << "Weak: " << genQuery(mitigateWeak(""), mitigateWeak("")) << endl;
-			cout << "Strong: " << genQuery(mitigateStrong(""), mitigateStrong("")) << endl;
+			cout << endl << "Ian:\n" << "Normal: " << genQuery("NotSus", "imposter' UNION SELECT * FROM nuclearLunchCodes") << endl; // SELECT WHERE "Outer_Space_TROLL" AND "SporeCaptain$piceTr@der"
+			cout << "Weak: " << genQuery(mitigateWeak("NotSus"), mitigateWeak("imposter' UNION SELECT * FROM nuclearLunchCodes")) << endl;
+			cout << "Strong: " << genQuery(mitigateStrong("NotSus"), mitigateStrong("imposter' UNION SELECT * FROM nuclearLunchCodes")) << endl;
 			break;
 
 		case 4: //Nicole
@@ -251,9 +251,9 @@ void testAddState()
 			break;
 
 		case 3: // Ian
-			cout << endl << "Ian:\n" << "Normal: " << genQuery("", "") << endl; // SELECT WHERE "Outer_Space_TROLL" AND "SporeCaptain$piceTr@der"
-			cout << "Weak: " << genQuery(mitigateWeak(""), mitigateWeak("")) << endl;
-			cout << "Strong: " << genQuery(mitigateStrong(""), mitigateStrong("")) << endl;
+			cout << endl << "Ian:\n" << "Normal: " << genQuery("NotSus", "imposter' ; DROP INDEX * ON oxygenCodes") << endl; // SELECT WHERE "Outer_Space_TROLL" AND "SporeCaptain$piceTr@der"
+			cout << "Weak: " << genQuery(mitigateWeak("NotSus"), mitigateWeak("imposter' ; DROP INDEX * ON oxygenCodes")) << endl;
+			cout << "Strong: " << genQuery(mitigateStrong("NotSus"), mitigateStrong("imposter' ; DROP INDEX * ON oxygenCodes")) << endl;
 			break;
 
 		case 4: //Nicole
@@ -296,9 +296,9 @@ void testComment()
 			break;
 
 		case 3: // Ian
-			cout << endl << "Normal: " << genQuery("", "") << endl; // SELECT WHERE "Outer_Space_TROLL" AND "SporeCaptain$piceTr@der"
-			cout << "Weak: " << genQuery(mitigateWeak(""), mitigateWeak("")) << endl;
-			cout << "Strong: " << genQuery(mitigateStrong(""), mitigateStrong("")) << endl;
+			cout << endl << "Normal: " << genQuery("NotSus", " ; --ejected!") << endl; // SELECT WHERE "Outer_Space_TROLL" AND "SporeCaptain$piceTr@der"
+			cout << "Weak: " << genQuery(mitigateWeak("NotSus"), mitigateWeak(" ; --ejected!")) << endl;
+			cout << "Strong: " << genQuery(mitigateStrong("NotSus"), mitigateStrong(" ; --ejected!")) << endl;
 			break;
 
 		case 4: //Nicole
